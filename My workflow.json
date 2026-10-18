@@ -1,1 +1,173 @@
-
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4750b2ad-2d6d-4d3b-8845-1c36a5674c45",
+      "name": "When chat message received",
+      "webhookId": "62240c9d-9f74-480b-8876-c8b5ce3a795d"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant\nif you get any message regarding arithmetic calculation, then use the attached tool to perform and return final outcome of the calculation "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "cc95b9ba-c60a-4c0f-afa8-1060982ae4bb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "2a3f36f0-366a-4cac-851d-d974c17cc350",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "I3H44bstnmaen64O",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "65999530-9e37-4d2a-a7e9-90a8be752649",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        384,
+        208
+      ],
+      "id": "906767b7-0966-4529-a9bb-ffce4b9d5a9c",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "24jr5a0501@gmail.com",
+        "subject": "Successfully Executed",
+        "emailType": "text",
+        "message": "={{ 'Calculation is Successful. Result: ' + $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        0
+      ],
+      "id": "38077711-b546-4562-8c26-2dc237711201",
+      "name": "Send a message",
+      "webhookId": "bc861dc1-a508-499a-a1b7-1fde6ecdd0a0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vKOppF3mxWBHZoB0",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "29d0f2f4-d1be-4fc9-9fee-33354aadf46a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5de9c0721bbe61208bfdae1f045995ce66222160967660f5b22b6b51447f197b"
+  },
+  "nodeGroups": [],
+  "id": "aJ5NZMI1NCaWBJfo",
+  "tags": []
+}
